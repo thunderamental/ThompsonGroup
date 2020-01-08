@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "vega": "^5.9.0"
+    "vega": "^5.9.0",
+    "vega-embed": "^6.2.1"
   }
 }
