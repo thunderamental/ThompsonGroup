@@ -82,49 +82,49 @@ function getPreorderIndex(node, preorder) {
 
 
 /* the following section hardcodes the two generating elements for F. */
-var gA = new eltF(new caretNode(null), new caretNode(null));
-gA.a.left = new caretNode(gA.a);
-gA.a.right = new caretNode(gA.a);
-gA.a.left.left = new caretNode(gA.a.left);
-gA.a.left.right = new caretNode(gA.a.left);
-gA.b.right = new caretNode(gA.b);
-gA.b.left = new caretNode(gA.b);
-gA.b.right.left = new caretNode(gA.b.right);
-gA.b.right.right = new caretNode(gA.b.right);
-generatePreorder(gA.a, gA.leafA);
-generatePreorder(gA.b, gA.leafB);
+var x0 = new eltF(new caretNode(null), new caretNode(null));
+x0.a.left = new caretNode(x0.a);
+x0.a.right = new caretNode(x0.a);
+x0.a.left.left = new caretNode(x0.a.left);
+x0.a.left.right = new caretNode(x0.a.left);
+x0.b.right = new caretNode(x0.b);
+x0.b.left = new caretNode(x0.b);
+x0.b.right.left = new caretNode(x0.b.right);
+x0.b.right.right = new caretNode(x0.b.right);
+generatePreorder(x0.a, x0.leafA);
+generatePreorder(x0.b, x0.leafB);
 
-console.log("The first generating element:", gA);
+console.log("The first generating element:", x0);
 console.log("A preorder on the references to leaves is included. Examples:")
-console.log("The preorder index of gA.a.left.left is " + gA.leafA.indexOf(gA.a.left.left));
-console.log("The preorder index of gA.a.left.right is " + gA.leafA.indexOf(gA.a.left.right));
+console.log("The preorder index of x0.a.left.left is " + x0.leafA.indexOf(x0.a.left.left));
+console.log("The preorder index of x0.a.left.right is " + x0.leafA.indexOf(x0.a.left.right));
 
-var gB = new eltF(new caretNode(null), new caretNode(null));
-gB.a.left = new caretNode(gB.a);
-gB.a.right = new caretNode(gB.a);
-gB.a.right.left = new caretNode(gB.a.right);
-gB.a.right.left.left = new caretNode(gB.a.right.left);
-gB.a.right.left.right = new caretNode(gB.a.right.left);
-gB.a.right.right = new caretNode(gB.a.right);
-gB.b.left = new caretNode(gB.b);
-gB.b.right = new caretNode(gB.b);
-gB.b.right.left = new caretNode(gB.b.right);
-gB.b.right.right = new caretNode(gB.b.right);
-gB.b.right.right.left = new caretNode(gB.b.right.right);
-gB.b.right.right.right = new caretNode(gB.b.right.right);
-generatePreorder(gB.a, gB.leafA);
-generatePreorder(gB.b, gB.leafB);
+var x1 = new eltF(new caretNode(null), new caretNode(null));
+x1.a.left = new caretNode(x1.a);
+x1.a.right = new caretNode(x1.a);
+x1.a.right.left = new caretNode(x1.a.right);
+x1.a.right.left.left = new caretNode(x1.a.right.left);
+x1.a.right.left.right = new caretNode(x1.a.right.left);
+x1.a.right.right = new caretNode(x1.a.right);
+x1.b.left = new caretNode(x1.b);
+x1.b.right = new caretNode(x1.b);
+x1.b.right.left = new caretNode(x1.b.right);
+x1.b.right.right = new caretNode(x1.b.right);
+x1.b.right.right.left = new caretNode(x1.b.right.right);
+x1.b.right.right.right = new caretNode(x1.b.right.right);
+generatePreorder(x1.a, x1.leafA);
+generatePreorder(x1.b, x1.leafB);
 
-console.log("The second generating element:", gB);
+console.log("The second generating element:", x1);
 
-var gAinv = new eltF(gA.b, gA.a);
-generatePreorder(gAinv.a, gAinv.leafA);
-generatePreorder(gAinv.b, gAinv.leafB);
-var gBinv = new eltF(gB.b, gB.a);
-generatePreorder(gBinv.a, gBinv.leafA);
-generatePreorder(gBinv.b, gBinv.leafB);
+var x0inv = new eltF(x0.b, x0.a);
+generatePreorder(x0inv.a, x0inv.leafA);
+generatePreorder(x0inv.b, x0inv.leafB);
+var x1inv = new eltF(x1.b, x1.a);
+generatePreorder(x1inv.a, x1inv.leafA);
+generatePreorder(x1inv.b, x1inv.leafB);
 
-console.log("The inverses of gA and gB: ", gAinv, gBinv);
+console.log("The inverses of x0 and x1: ", x0inv, x1inv);
 
 
 function copyNode(inp) {
@@ -165,7 +165,7 @@ function findFirst(node1, node2) {
 // POA: get index of a and write b to the node where a's tree's partner is. 
 
 
-function fOperation(first, second) {
+function fOp(first, second) {
     var out1array = [];
     var out2array = [];
     var hold1array = [];
@@ -182,11 +182,7 @@ function fOperation(first, second) {
 
     generatePreorder(hold1, hold1array);
     generatePreorder(hold2, hold2array);
-    /*
-    var tempNode = new caretNode();
-    var compNode = new caretNode();
-    var override = new caretNode();
-    */
+
     var tempArray = [];
     var index = 0;
 
@@ -232,57 +228,7 @@ function fOperation(first, second) {
       generatePreorder(hold2, hold2array);
       tempArray = []; // cleanup
     }
-
-    /*
-    while (findFirst(hold2, hold1)!=null) {
-      tempArray = findFirst(hold2, hold1); 
-      // find the next node in the left element to be 'superimposed'
-      index = second.leafA.indexOf(tempArray[0]);
-      // get index of hold1's node
-      tempArray[0] = tempArray[1]; 
-      // make hold1 into hold2 as usual
-      second.leafB[index] = tempArray[1];
-      // add to the partner tree
-      second.leafA = [];
-      second.leafB = []; // reset preorder
-      generatePreorder(second.a, second.leafA);
-      generatePreorder(second.b, second.leafB);
-      tempArray = []; // cleanup
-    }
-
     
-    // left-compare
-    tempNode = hold1;
-    compNode = hold2;
-
-    while (tempNode.left != null) {
-        tempNode = tempNode.left;
-        compNode = compNode.left;
-    }
-
-    override = compNode.left;
-    tempNode = out1;
-    while (tempNode.left != null) {
-        tempNode = tempNode.left;
-    }
-    tempNode.left = override;
-    
-    // right-compare
-    tempNode = hold2;
-    compNode = hold1;
-
-    while (tempNode.right != null) {
-        tempNode = tempNode.right;
-        compNode = compNode.right;
-    }
-
-    override = compNode.right;
-    tempNode = out2;
-    while (tempNode.right != null) {
-        tempNode = tempNode.right;
-    }
-    tempNode.right = override;
-    */
     var output = new eltF(out1, out2);
     output.leafA = out1array;
     output.leafB = out2array;
@@ -290,8 +236,40 @@ function fOperation(first, second) {
  
 }
 
-console.log("Output of gA*gA: ", fOperation(gA, gA));
-console.log("Output of gA*gB: ", fOperation(gA, gB));
-console.log("Output of gA*gAinv: ", fOperation(gA, gAinv));
+console.log("Output of x0*x0: ", fOp(x0, x0));
+console.log("Output of x0*x1: ", fOp(x0, x1));
+console.log("Output of x0*x0inv: ", fOp(x0, x0inv));
 
-// oh my fucking god it works now to parse it all
+console.log("Output of x0inv*x1: ", fOp(x0inv, x1));
+
+
+function inv(elt) { // inverts element given
+  var out1 = copyNode(elt.a);
+  var out2 = copyNode(elt.b);
+
+  var outelt = new eltF(out2, out1);
+  generatePreorder(outelt.a, outelt.leafA);
+  generatePreorder(outelt.b, outelt.leafB)
+
+  return outelt;
+} // clearly composition tells one that the inverse just 'flips' the element.
+
+function xi(n) { // generates i'th element of the generating set.
+  if (n == 0) {
+    return x0;
+  } else if (n == 1) {
+    return x1;
+  } else {
+    return fOp(
+            fOp(
+              (inv(xi(n-2))),
+              xi(n-1)),
+            xi(n-2)); // x_n = x_(n-2)^-1 * x_(n-1) * x_(n-2). 
+  }
+}
+
+console.log("The generating element x_10 is: ", xi(10));
+
+function parse(inputString) {
+  // probably fill this in with regexp stuff. 
+}
