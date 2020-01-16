@@ -5,53 +5,66 @@
     <meta name="viewport" content="width=device-width">
     <title>Thompson F Temporary</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
+
+    <script src='https://d3js.org/d3.v5.min.js'></script>
+
   </head>
 
   <body>
-
-    <script src="script.js"></script>
 
     <div class="grid-container">
 
       <div>
 
         <form onSubmit="return false;"> 
-          Enter element 1 <input type="text" id="elt1in" value="Enter element here">
+          Enter element 1 <input type="text" id="elt1in">
           <input type="button" id="button1" value="click to input element" onclick="renderOne()">
         </form>
         
-        <img src="in1.png" alt="test image" height="200" width="400">
+        <!-- <img src="in1.png" alt="test image" height="200" width="400"> -->
+        <div id="in1acontainer" class="treesvg"></div>
+        <div id="in1bcontainer" class="treesvg"></div>
 
-        <output id="elt1out">The default element.</output>
+        <output id="elt1out">The default element, x0.</output>
 
       </div>
       
       <div>
         <p> Click to calculate </p>
-        <form> <input type="button" value="calculate"> </form> 
+        <form> 
+          <input type="button" id="calculate" value="calculate" onclick="calcButton()"> 
+        </form> 
       </div>
       
       <div>
         <form onSubmit="return false;">
-          Enter element 2 <input type="text" id="elt2in" value="Enter element here">
+          Enter element 2 <input type="text" id="elt2in">
           <input type="button" id="button2" value="click to input element" onclick="renderTwo()">
         </form>
 
-        <img src="in2.png" alt="test image" height="200" width="400">
 
-        <output id="elt2out">The default element.</output>
+        <div id="in2acontainer" class="treesvg"></div>
+        <div id="in2bcontainer" class="treesvg"></div>
+
+        <output id="elt2out">The default element, x0.</output>
 
       </div>  
       
       <div>4</div>
       
-      <div>output string <img src="out.png" alt="test image" height="200" width="400"></div>
+      <div>output is:
+      
+        <div id="outacontainer" class="treesvg"></div>
+        <div id="outbcontainer" class="treesvg"></div>
+      
+      </div>
       
       <div>6
-        <img src="Test.svg" alt="test image" height="200" width="400">
+        <!-- <img src="Test.svg" alt="test image" height="200" width="400"> -->
       </div>  
     </div>
 
-  
+    <script src="script.js"></script>
+    
   </body>
 </html>

@@ -12,3 +12,19 @@
     padding: 20px 0;
     font-size: 30px;
   }
+
+.treesvg {
+  height: 300px;
+  width: 200px;
+}
+/* #in1container {
+  height: 300px;
+  width: 200px;
+} */
+
+
+.link {
+  fill: none;
+  stroke: #000000;
+  stroke-width: 2px;
+}

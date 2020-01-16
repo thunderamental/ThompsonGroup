@@ -8,7 +8,7 @@ and unless specified otherwise, they refer to the previous immediate line.
 */
 
 
-window.onload=function(){ // triggered after window is fully loaded.
+window.onload=function(){ // triggered after window is fully loaded. For input.
 
   var input = document.getElementById("elt1in");
   input.addEventListener("keyup", function(event) {
@@ -33,6 +33,10 @@ function renderOne(){
   var eltOut = document.getElementById("elt1out");
   var elt = eltIn.value;
   console.log(elt);
+
+  drawTree(x0.a, "in1acontainer");
+  drawTree(x0.b, "in1bcontainer");
+
   eltOut.value = "Input was " + elt;
 } // button click elt 1
 
@@ -42,8 +46,19 @@ function renderTwo(){
   var eltOut = document.getElementById("elt2out");
   var elt = eltIn.value;
   console.log(elt);
+
+  drawTree(x1.a, "in2acontainer");
+  drawTree(x1.b, "in2bcontainer");
+
   eltOut.value = "Input was " + elt;
 } // button click elt 2
+
+function calcButton() {
+
+  drawTree(fOp(x0, x1).a, "outacontainer");
+  drawTree(fOp(x0, x1).b, "outbcontainer");
+
+} // button click calculate
 
 console.log("Javascript test of Thompson F element operation");
 
@@ -64,6 +79,14 @@ class eltF {
     }
 } // element of vagabond F. Pair of binary trees and two arrays for leaf preorder
 
+class node { // JSON-d3 standard.
+  constructor(input) {
+    this.name = null;
+    this.parent = input;
+    this.children = [];
+  }
+}
+
 function generatePreorder(node, outputArray) {
   if (node.left == null) {
     outputArray.push(node);
@@ -81,7 +104,7 @@ function getPreorderIndex(node, preorder) {
 } // this entire function is INCREDIBLY unnecessary but i'm keeping it as an omen of things to come LOL
 
 
-/* the following section hardcodes the two generating elements for F. */
+/* the following section hardcodes the two generating elements for F, x_0 and x_1. */
 var x0 = new eltF(new caretNode(null), new caretNode(null));
 x0.a.left = new caretNode(x0.a);
 x0.a.right = new caretNode(x0.a);
@@ -127,7 +150,7 @@ generatePreorder(x1inv.b, x1inv.leafB);
 console.log("The inverses of x0 and x1: ", x0inv, x1inv);
 
 
-function copyNode(inp) {
+function copyNode(inp) { // JSON-stringify-parse with circular dodge
   var cache = [];
     let clone = JSON.parse(JSON.stringify(inp, function(key, value) {
       if (typeof value === 'object' && value !== null) {
@@ -143,6 +166,23 @@ function copyNode(inp) {
   cache = null;
   return clone;
 } // see https://stackoverflow.com/questions/11616630/how-can-i-print-a-circular-structure-in-a-json-like-format
+
+function stringifyNode(inp) { // JSON-stringify with circular dodge
+  var cache = [];
+    let clone = JSON.stringify(inp, function(key, value) {
+      if (typeof value === 'object' && value !== null) {
+          if (cache.indexOf(value) !== -1) {
+              // Duplicate reference found, discard key
+              return;
+          }
+          // Store value in our collection
+          cache.push(value);
+      }
+      return value;
+  });
+  cache = null;
+  return clone;
+} // returns string instead of the JSON-object.
 
 function findFirst(node1, node2) {
   if (node2.left == null) {
@@ -162,10 +202,10 @@ function findFirst(node1, node2) {
     }
   }
 } // returns an array [a,b], where b should now overwrite a.
-// POA: get index of a and write b to the node where a's tree's partner is. 
+// 'findfirst' indicates the first found subtree that node1 does not have that node2 does
 
 
-function fOp(first, second) {
+function fOp(first, second) { // the group operation.
     var out1array = [];
     var out2array = [];
     var hold1array = [];
@@ -187,21 +227,17 @@ function fOp(first, second) {
     var index = 0;
 
     if (findFirst(hold1, hold2)!=null) {
-      console.log("non null triggered");
+      // console.log("non null triggered");
       tempArray = findFirst(hold1, hold2); 
       // find the next node in the left element to be 'superimposed'
       index = hold1array.indexOf(tempArray[0]);
-      console.log("index of swap node is " + index);
-      console.log("test for reference.. ", out1array[0] == out1.left.left);
+      // console.log("index of swap node is " + index);
       // get index of hold1's node to be replaced
-      console.log("node to be copied", tempArray[1]);
-      tempArray[0].left = copyNode(tempArray[1].left); // NEEDS TO COPY PARENT
+      tempArray[0].left = copyNode(tempArray[1].left); 
       tempArray[0].right = copyNode(tempArray[1].right);
       // make hold1 into hold2 as usual
-      console.log("out1",out1);
-      out1array[index].left = copyNode(tempArray[1].left); // NEEDS TO COPY PARENT
+      out1array[index].left = copyNode(tempArray[1].left);
       out1array[index].right = copyNode(tempArray[1].right);
-      console.log("out1",out1);
       // add to the partner tree
       out1array = [];
       hold1array = []; // reset preorder
@@ -214,7 +250,6 @@ function fOp(first, second) {
       tempArray = findFirst(hold2, hold1); 
       // find the next node in the right element to be 'superimposed'
       index = hold2array.indexOf(tempArray[0]);
-      console.log("index of swap node is " + index);
       // get index of hold2's node to be replaced
       tempArray[0].left = copyNode(tempArray[1].left); // NEEDS TO COPY PARENT
       tempArray[0].right = copyNode(tempArray[1].right); 
@@ -264,12 +299,108 @@ function xi(n) { // generates i'th element of the generating set.
             fOp(
               (inv(xi(n-2))),
               xi(n-1)),
-            xi(n-2)); // x_n = x_(n-2)^-1 * x_(n-1) * x_(n-2). 
+            xi(n-2));  
   }
-}
+} // x_n = x_(n-2)^-1 * x_(n-1) * x_(n-2).
 
 console.log("The generating element x_10 is: ", xi(10));
 
 function parse(inputString) {
-  // probably fill this in with regexp stuff. 
-}
+
+  return "This is not a valid element.";
+} // probably fill this in with regexp stuff. 
+
+function convertStandard(input) { // takes a caretNode and converts it to JSON standard.
+  if (input == null) {return null;}
+  else {
+    var output = new node(null);
+    if (input.left != null) {
+      output.children = [convertStandard(input.left), convertStandard(input.right)];
+      output.children[0].parent = output;
+      output.children[1].parent = output;
+    }
+    return output;
+  }
+} // Consider porting the calculation code to JSON standard. For now, this works.
+
+console.log("convert my tree to JSON standard for d3 render: x1-left is: ", convertStandard(x1.a))
+console.log("the JSON, in string form: ", stringifyNode(convertStandard(x0.a)));
+
+  function drawTree(root, inputID) {
+
+    var svgHold = d3.select("#"+inputID); 
+    svgHold.selectAll("*").remove(); // this is supposed to clear all elt's in svgHold.
+    var svgOutL = d3.select("#"+inputID).append("svg")
+                    .attr("height","100%")
+                    .attr("width","100%");
+  
+    var margin = {left:0, right:0, top:50, bottom:0};
+  
+    var svgL = 
+    svgOutL.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' );
+  
+    var root = d3.hierarchy(convertStandard(root));
+  
+    var treeLayout = d3.tree();
+    treeLayout.size([200, 150]);
+    treeLayout(root);
+  
+    svgL.selectAll("circle")
+    .data(root.descendants())
+    .enter().append("circle")
+      .attr("cx", function(d,i){ return d.x; })
+      .attr("cy", function(d,i){ return d.y; })
+      .attr("r", "5");  
+  
+    svgL.selectAll('link')
+      .data(root.links())
+      .enter()
+      .append('line')
+      .classed('link', true)
+      .attr('x1', function(d) {return d.source.x;})
+      .attr('y1', function(d) {return d.source.y;})
+      .attr('x2', function(d) {return d.target.x;})
+      .attr('y2', function(d) {return d.target.y;})
+      .style("stroke", "black");
+  
+    }
+
+
+
+/* the following was my (Successful!) attempt to draw said tree
+
+var svg1aC = 
+  d3.select("#in1container").append("svg")
+    .attr("height","100%")
+    .attr("width","100%");
+
+var margin = {left:0, right:0, top:50, bottom:0};
+// svg1a.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' );
+var svg1a = 
+svg1aC.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' );
+
+var root = d3.hierarchy(convertStandard(x0.a));
+
+var treeLayout = d3.tree();
+treeLayout.size([200, 150]);
+treeLayout(root);
+
+svg1a.selectAll("circle")
+.data(root.descendants())
+.enter().append("circle")
+  .attr("cx", function(d,i){ return d.x; })
+  .attr("cy", function(d,i){ return d.y; })
+  .attr("r", "5");  
+
+svg1a.selectAll('link')
+  .data(root.links())
+  .enter()
+  .append('line')
+  .classed('link', true)
+  .attr('x1', function(d) {return d.source.x;})
+  .attr('y1', function(d) {return d.source.y;})
+  .attr('x2', function(d) {return d.target.x;})
+  .attr('y2', function(d) {return d.target.y;})
+  .style("stroke", "black");
+
+*/
