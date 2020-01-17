@@ -28,3 +28,19 @@
   stroke: #000000;
   stroke-width: 2px;
 }
+
+.treesvg { 
+  display: inline-block; 
+  float: left; 
+  width: 50% 
+}
+/* 
+#in1acontainer {
+  float: left;
+  width: 50%;
+}
+
+#in1bcontainer {
+  float: left;
+  width: 50%;
+} */

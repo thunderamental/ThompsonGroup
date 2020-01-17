@@ -26,37 +26,93 @@ window.onload=function(){ // triggered after window is fully loaded. For input.
     }
   });
 
+  
 }
 
+function parseArray(inputArray) {
+  console.log("Parse array executing with inputArray ", inputArray);
+  var outputElt = null; // this should actually be the identity.
+  var holdElt = null;
+  for (element of inputArray) {
+    if (outputElt == null) {
+      if (element >= 0) {
+        outputElt = xi(element); 
+      } else {
+        outputElt = inv(xi(Math.abs(element)));
+      }
+    } else {
+      if (element >= 0) {
+        holdElt = fOp(outputElt, xi(element));
+        outputElt = holdElt;
+      } else {
+        holdElt = fOp(outputElt,inv(xi(Math.abs(element))));
+        outputElt = holdElt;
+      }
+    }
+  }
+  return outputElt;
+} // WORKS
+
 function renderOne(){
+  var eltFout = null;
+
   var eltIn = document.getElementById("elt1in");
   var eltOut = document.getElementById("elt1out");
   var elt = eltIn.value;
   console.log(elt);
+  if (elt == "") { // change to 'unreadable input'
+    eltOut.value = "Empty input. Defaulted to x0.";
+    eltFout = x0;
+  } else {
+    // write a parser.
+    var hold = JSON.parse('[' + elt + ']'); 
+    console.log("hold : ", hold); // JSON parsing array works. now what's wrong?
+    eltFout = parseArray(hold);
 
-  drawTree(x0.a, "in1acontainer");
-  drawTree(x0.b, "in1bcontainer");
+    console.log("parsed Array element was (eltFout)", eltFout)
 
-  eltOut.value = "Input was " + elt;
+    eltOut.value = "(Input was " + elt + ")" ;
+  }
+  drawTree(eltFout.a, "in1acontainer");
+  drawTree(eltFout.b, "in1bcontainer");
 } // button click elt 1
 
-
 function renderTwo(){
+  var eltFout = null;
+
   var eltIn = document.getElementById("elt2in");
   var eltOut = document.getElementById("elt2out");
   var elt = eltIn.value;
   console.log(elt);
+  if (elt == "") { // change to 'unreadable input'
+    eltOut.value = "Empty input. Defaulted to x0.";
+    eltFout = x0;
+  } else {
+    // write a parser.
+    var hold = JSON.parse('[' + elt + ']'); 
+    console.log("hold : ", hold); // JSON parsing array works. now what's wrong?
+    eltFout = parseArray(hold);
 
-  drawTree(x1.a, "in2acontainer");
-  drawTree(x1.b, "in2bcontainer");
+    console.log("parsed Array element was (eltFout)", eltFout)
 
-  eltOut.value = "Input was " + elt;
-} // button click elt 2
+    eltOut.value = "(Input was " + elt + ")" ;
+  }
+  drawTree(eltFout.a, "in2acontainer");
+  drawTree(eltFout.b, "in2bcontainer");
+} // button click elt 2 DONE
 
 function calcButton() {
 
-  drawTree(fOp(x0, x1).a, "outacontainer");
-  drawTree(fOp(x0, x1).b, "outbcontainer");
+  var elt1In = document.getElementById("elt1in");
+  var elt2In = document.getElementById("elt2in");
+  var inArray = JSON.parse('[' + elt1In.value + ',' + elt2In.value + ']'); 
+
+  var eltOut = document.getElementById("outdown");
+
+  var eltFout = parseArray(inArray);
+
+  drawTree(eltFout.a, "outacontainer");
+  drawTree(eltFout.b, "outbcontainer");
 
 } // button click calculate
 
@@ -305,10 +361,6 @@ function xi(n) { // generates i'th element of the generating set.
 
 console.log("The generating element x_10 is: ", xi(10));
 
-function parse(inputString) {
-
-  return "This is not a valid element.";
-} // probably fill this in with regexp stuff. 
 
 function convertStandard(input) { // takes a caretNode and converts it to JSON standard.
   if (input == null) {return null;}
@@ -342,7 +394,7 @@ console.log("the JSON, in string form: ", stringifyNode(convertStandard(x0.a)));
     var root = d3.hierarchy(convertStandard(root));
   
     var treeLayout = d3.tree();
-    treeLayout.size([200, 150]);
+    treeLayout.size([200, 150]); // smaller than div by abt 40%. just to fit. 
     treeLayout(root);
   
     svgL.selectAll("circle")
