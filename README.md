@@ -1,2 +1,33 @@
-# ThompsonGroup
-Simple webapp to calculate the group operation on the Thompson Group(s)
+# Thompson Group F
+A simple client side webapp to calculate the group operation on the tree-pair representation of Thompson Group F (Vagabond Groups, Chameleon Groups). Said group will henceforth be referred to as just 'F'. 
+
+This was done (by me, KW Theng) as part of a research scholarship project at the University of Melbourne under the supervision of Dr. Lawrence Reeves. 
+
+## Overview
+The elements of F (and its related groups F_Tau, T, V, to name some), possess a nice visual representation in terms of pairs of balanced full binary trees. This small app provides a simple calculator based off the infinite generating set for F. It also is able to reduce tree-pair elements to a simple form. Currently, input is in terms of the infinite generating set.
+
+Most code is fully front-end in JS, due to the simplicity of the required work and the ease of setup of such a product. I don't recommend this for anything more complicated.
+
+## Some group theory
+F is an infinite group but possesses a finite (two elements!) generating set:
+![presentation](https://wikimedia.org/api/rest_v1/media/math/render/svg/3aa741bdc915a1f7baea62d1f970a171b87b476a) -- from wikipedia.
+
+The infinite presentation can be derived from the finite one. ![presentation2](https://wikimedia.org/api/rest_v1/media/math/render/svg/0bb0364d591aceef7c04107d94a773e98f21c119) -- also from wikipedia.
+
+There is an (as of writing) open conjecture that F is not amenable. 
+
+One can read more about this group online. A recommended resource is Jose Burillo's "Introduction to Thompson's Group F", which has been very helpful for my study into it.
+
+## Checklist.
+- [x] Complete simple 2-element operation.
+- [x] Move away from manual tree input to terms of generator.
+- [x] Implement visual representation. Test out
+    - [x] ~~Treant.js~~ ugly
+    - [x] ~~Vega.js~~ too narrow
+    - [x] d3.js
+- [x] Tidy up CSS and add UI buttons.
+- [x] Fix input and string-to-element parser.
+- [x] Add ability to reduce tree pair elements.
+- [ ] Add ability to obtain normal form from tree pair.
+- [ ] Tidy up UI text and add header to github.
+- [ ] Host on persistent domain.
