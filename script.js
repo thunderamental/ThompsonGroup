@@ -7,6 +7,14 @@ high school. Comments usually come after functions and after lines of code,
 and unless specified otherwise, they refer to the previous immediate line.
 */
 
+/*
+17/01/2019: Most of the basic features are now implemented. 
+Finalizing this is the 2 more math heavy ideas.
+1. Removing similar subtrees. (Should be relatively easy.)
+2. Reduce to normal form. (Algorithmic approach to this exists.)
+Combining these ideas will 
+*/
+
 
 window.onload=function(){ // triggered after window is fully loaded. For input.
 
@@ -107,7 +115,7 @@ function calcButton() {
   var elt2In = document.getElementById("elt2in");
   var inArray = JSON.parse('[' + elt1In.value + ',' + elt2In.value + ']'); 
 
-  var eltOut = document.getElementById("outdown");
+  var eltOut = document.getElementById("outdown"); // put this to use later. Normal Form
 
   var eltFout = parseArray(inArray);
 
@@ -115,6 +123,20 @@ function calcButton() {
   drawTree(eltFout.b, "outbcontainer");
 
 } // button click calculate
+
+function reduceButton() {
+  var elt1In = document.getElementById("elt1in");
+  var elt2In = document.getElementById("elt2in");
+  var inArray = JSON.parse('[' + elt1In.value + ',' + elt2In.value + ']'); 
+
+  var eltOut = document.getElementById("outdown"); // put this to use later. Normal Form
+
+  var eltFout = reduce(parseArray(inArray));
+
+
+  drawTree(eltFout.a, "outacontainer");
+  drawTree(eltFout.b, "outbcontainer");
+}
 
 console.log("Javascript test of Thompson F element operation");
 
@@ -240,6 +262,9 @@ function stringifyNode(inp) { // JSON-stringify with circular dodge
   return clone;
 } // returns string instead of the JSON-object.
 
+console.log("stringified x0.a:", stringifyNode(x0.a)); 
+// JSON stringify can be used to deep-equals compare two JSON like objects.
+
 function findFirst(node1, node2) {
   if (node2.left == null) {
     return null; 
@@ -282,7 +307,7 @@ function fOp(first, second) { // the group operation.
     var tempArray = [];
     var index = 0;
 
-    if (findFirst(hold1, hold2)!=null) {
+    if (findFirst(hold1, hold2)!=null) { // originally 'while findFirst != null'..
       // console.log("non null triggered");
       tempArray = findFirst(hold1, hold2); 
       // find the next node in the left element to be 'superimposed'
@@ -302,7 +327,7 @@ function fOp(first, second) { // the group operation.
       tempArray = []; // cleanup
     }
 
-    if (findFirst(hold2, hold1)!=null) {
+    if (findFirst(hold2, hold1)!=null) { // originally 'while findFirst != null'..
       tempArray = findFirst(hold2, hold1); 
       // find the next node in the right element to be 'superimposed'
       index = hold2array.indexOf(tempArray[0]);
@@ -378,81 +403,195 @@ function convertStandard(input) { // takes a caretNode and converts it to JSON s
 console.log("convert my tree to JSON standard for d3 render: x1-left is: ", convertStandard(x1.a))
 console.log("the JSON, in string form: ", stringifyNode(convertStandard(x0.a)));
 
-  function drawTree(root, inputID) {
+function drawTree(root, inputID) { // NOTE. THE eltF TO tree CONVERSION IS DONE IN HERE. ALL math-logic IS IN eltF form!
+  var svgHold = d3.select("#"+inputID); 
+  svgHold.selectAll("*").remove(); // this is supposed to clear all elt's in svgHold.
+  var svgOutL = d3.select("#"+inputID).append("svg")
+                  .attr("height","100%")
+                  .attr("width","100%");
 
-    var svgHold = d3.select("#"+inputID); 
-    svgHold.selectAll("*").remove(); // this is supposed to clear all elt's in svgHold.
-    var svgOutL = d3.select("#"+inputID).append("svg")
-                    .attr("height","100%")
-                    .attr("width","100%");
-  
-    var margin = {left:0, right:0, top:50, bottom:0};
-  
-    var svgL = 
-    svgOutL.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' );
-  
-    var root = d3.hierarchy(convertStandard(root));
-  
-    var treeLayout = d3.tree();
-    treeLayout.size([200, 150]); // smaller than div by abt 40%. just to fit. 
-    treeLayout(root);
-  
-    svgL.selectAll("circle")
-    .data(root.descendants())
-    .enter().append("circle")
-      .attr("cx", function(d,i){ return d.x; })
-      .attr("cy", function(d,i){ return d.y; })
-      .attr("r", "5");  
-  
-    svgL.selectAll('link')
-      .data(root.links())
-      .enter()
-      .append('line')
-      .classed('link', true)
-      .attr('x1', function(d) {return d.source.x;})
-      .attr('y1', function(d) {return d.source.y;})
-      .attr('x2', function(d) {return d.target.x;})
-      .attr('y2', function(d) {return d.target.y;})
-      .style("stroke", "black");
-  
+  var margin = {left:0, right:0, top:50, bottom:0};
+
+  var svgL = 
+  svgOutL.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' );
+
+  var root = d3.hierarchy(convertStandard(root));
+
+  var treeLayout = d3.tree();
+  treeLayout.size([200, 150]); // smaller than div by abt 40%. just to fit. 
+  treeLayout(root);
+
+  svgL.selectAll("circle")
+  .data(root.descendants())
+  .enter().append("circle")
+    .attr("cx", function(d,i){ return d.x; })
+    .attr("cy", function(d,i){ return d.y; })
+    .attr("r", "5");  
+
+  svgL.selectAll('link')
+    .data(root.links())
+    .enter()
+    .append('line')
+    .classed('link', true)
+    .attr('x1', function(d) {return d.source.x;})
+    .attr('y1', function(d) {return d.source.y;})
+    .attr('x2', function(d) {return d.target.x;})
+    .attr('y2', function(d) {return d.target.y;})
+    .style("stroke", "black");
+
+  }
+
+function fEquals(first, second) { // verify two eltFs are equal
+  if (  (stringifyNode(first.a) == stringifyNode(second.a)) &&
+        (stringifyNode(first.b) == stringifyNode(second.b)) ) {
+          return true;
+        } else { return false; }
+}
+
+// WARNING. I MAY HAVE MISUNDERSTOOD THE SUBTREE-REDUCTION PROCESS..
+
+function eqs(a,b) { // compares 2 roots of a (sub/)tree (a binary tree where all non-leafs have 2 children!)
+  if (a.left == null && b.left == null) { return true; } // only need to check 1 child
+  else {
+    if ((a.left == null && b.left != null) || (a.left != null && b.left == null)) { // XOR
+      return false;
+    } else {
+      return (eqs(a.left, b.left) && eqs(a.right, b.right));
     }
+  }
+}
+
+function enumF(f, outArray) { // adds all non leaf nodes of a tree to an iterable array.
+  if (f.left != null) {
+    outArray.push(f);
+    enumF(f.left, outArray);
+    enumF(f.right, outArray);
+  }
+}
+
+function firstCommon(a, b) {
+  var enumA = [];
+  var enumB = [];
+  enumF(a, enumA);
+  enumF(b, enumB);
+
+  var leafA = [];
+  var leafB = [];
+  generatePreorder(a, leafA);
+  generatePreorder(b, leafB);
+
+  var currTreeA = [];
+  var currTreeB = [];
+  var check = false;
+  
+  for (subtree1 of enumA) {
+    for (subtree2 of enumB) {
+      if (eqs(subtree1, subtree2)) {
+        generatePreorder(subtree1, currTreeA);
+        generatePreorder(subtree2, currTreeB);
+        if (currTreeA.length == currTreeB.length) {
+          check = true;
+          for (x = 0; x < currTreeA.length; x++) {
+            if (leafA.indexOf(currTreeA[x]) != leafB.indexOf(currTreeB[x])) {
+              check = false;
+            }
+            if (check == true) {
+              return [subtree1, subtree2]; // the common tree.
+            }
+          }
+        }
+        currTreeA = [];
+        currTreeB = [];
+      }
+    }
+  }
+  return null;
+}
 
 
+function reduce(f) {
+  var out1 = f.a;
+  var out2 = f.b;
+  var out1array = [];
+  var out2array = [];
+  var holdArray = [];
 
-/* the following was my (Successful!) attempt to draw said tree
+  while (firstCommon(out1, out2) != null) {
+    console.log("firstCommon while trigger in reduce");
+    console.log("out1 before:", out1);
+    console.log("out2 before:", out2);
+    holdArray = firstCommon(out1, out2);
+    holdArray[0].left = null;
+    holdArray[0].right = null;
+    holdArray[1].left = null;
+    holdArray[1].right = null;
+    console.log("out1 after:", out1);
+    console.log("out2 after:", out2);
+  }
 
-var svg1aC = 
-  d3.select("#in1container").append("svg")
-    .attr("height","100%")
-    .attr("width","100%");
+  var output = new eltF(out1, out2);
+  generatePreorder(output.a, output.leafA);
+  generatePreorder(output.b, output.leafB);
 
-var margin = {left:0, right:0, top:50, bottom:0};
-// svg1a.attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' );
-var svg1a = 
-svg1aC.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')' );
+  return output;
+}
 
-var root = d3.hierarchy(convertStandard(x0.a));
 
-var treeLayout = d3.tree();
-treeLayout.size([200, 150]);
-treeLayout(root);
+function findSimilar(node1, node2) { // finds first instance of common subtree.
+  if (node1.left == null && node2.left == null) {
+    return null; // end of the sub-tree. Nothing to copy.
+  }
+  if (eqs(node1, node2)) {
+    return [node1, node2]; 
+  } else if (node1.left != null && node2.left != null) {
+    if (findSimilar(node1.left, node2.left) != null) {
+      return findSimilar(node1.left, node2.left);
+    }
+  } else if (node1.right != null && node2.right != null) {
+    if (findSimilar(node1.right, node2.right) != null) {
+      return findSimilar(node1.right, node2.right);
+    }
+  } else {
+    return null;
+  }
+} // this implements the WRONG method! I'm keeping this here, though, it might be useful.
 
-svg1a.selectAll("circle")
-.data(root.descendants())
-.enter().append("circle")
-  .attr("cx", function(d,i){ return d.x; })
-  .attr("cy", function(d,i){ return d.y; })
-  .attr("r", "5");  
+/*
+function simplify(element) {
+  var out1 = element.a;
+  var out2 = element.b;
+  var holdArray = [];
 
-svg1a.selectAll('link')
-  .data(root.links())
-  .enter()
-  .append('line')
-  .classed('link', true)
-  .attr('x1', function(d) {return d.source.x;})
-  .attr('y1', function(d) {return d.source.y;})
-  .attr('x2', function(d) {return d.target.x;})
-  .attr('y2', function(d) {return d.target.y;})
-  .style("stroke", "black");
+  console.log("out1 before:", out1);
+  console.log("out2 before:", out2);
+  while(findSimilar(out1, out2) != null) {
+    console.log("trigger while loop in simplify");
+    holdArray = findSimilar(out1, out2);
+    console.log("holdArray", holdArray);
+    holdArray[0].left = null;
+    holdArray[0].right = null;
+    holdArray[1].left = null;
+    holdArray[1].right = null;
+    console.log("holdArray", holdArray);
+  }
+  console.log("out1 after:", out1);
+  console.log("out2 after:", out2);
+  console.log("findSimilar(out1,out2)", findSimilar(out1, out2))
 
+  var out1array = [];
+  var out2array = [];
+  generatePreorder(out1, out1array);
+  generatePreorder(out2, out2array);
+  var output = new eltF(out1, out2);
+  output.leafA = out1array;
+  output.leafB = out2array;
+  return output;
+}
 */
+// console.log("simplify(x0): ", simplify(x0))
+// console.log("simplify(x0) == x0 ", fEquals(simplify(x0),x0));
+
+console.log("reduce(x0*x0inv): ", reduce(fOp(x0, x0inv)));
+console.log("reduce(x1*x1inv): ", reduce(fOp(x1, x1inv)));
+
+console.log("reduce(x0*x1*x1inv): ", reduce(fOp(fOp(x0, x1), x1inv)));
