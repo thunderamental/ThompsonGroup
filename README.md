@@ -10,9 +10,11 @@ Most code is fully front-end in JS, due to the simplicity of the required work a
 
 ## Some group theory
 F is an infinite group but possesses a finite (two elements!) generating set:
+
 ![presentation](https://wikimedia.org/api/rest_v1/media/math/render/svg/3aa741bdc915a1f7baea62d1f970a171b87b476a) -- from wikipedia.
 
 The infinite presentation can be derived from the finite one:
+
 ![presentation2](https://wikimedia.org/api/rest_v1/media/math/render/svg/0bb0364d591aceef7c04107d94a773e98f21c119) -- also from wikipedia.
 
 There is an (as of writing) open conjecture that F is not amenable. 
