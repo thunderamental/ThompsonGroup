@@ -28,20 +28,21 @@
 
         <output id="elt1out">An empty string will default to the generator x0.</output>
         <form> 
-          <input type="button" id="reduce1" value="Reduce input 1" onclick="reduce1Button()"> 
+          <input type="button" id="reduce1" value="Reduce input 1" onclick="reduceOne()"> 
           <!-- this isnt done but is an easy port. see reduceButton(), the output version. -->
         </form>
         
       </div>
       
       <div>
-        <p> Input format: '1, 2, 3' will compute x1*x2*x3, where xn is the nth generating element, and so on. </p>
-        <form> 
-          <input type="button" id="calculate" value="Calculate unreduced output" onclick="calcButton()"> 
-        </form> 
-        <p> Click to calculate. (You may need to zoom out in your browser in order to view elements properly.) </p>
+        <p> Input format: '1, -2, 3' will compute x1*inverse(x2)*x3, where xn is the nth generating element, and so on. </p>
+        
+        <p> Click below to calculate. (You may need to zoom out in your browser in order to view elements properly.) </p>
         <form> 
           <input type="button" id="reduceOutput" value="Calculate reduced output" onclick="reduceButton()"> 
+        </form> 
+        <form> 
+          <input type="button" id="calculate" value="Calculate unreduced output from string" onclick="calcButton()"> 
         </form> 
       </div>
       
@@ -57,7 +58,7 @@
 
         <output id="elt2out">An empty string will default to the generator x0.</output>
         <form> 
-          <input type="button" id="reduce2" value="Reduce input 2" onclick="reduce2Button()"> 
+          <input type="button" id="reduce2" value="Reduce input 2" onclick="reduceTwo()"> 
           <!-- this isnt done but is an easy port. see reduceButton(), the output version. -->
         </form>
       </div>  
@@ -67,10 +68,10 @@
       </div>
       
       <div>
-        <output id ="outDown"></output>
+        
         <div id="outacontainer" class="treesvg"></div>
         <div id="outbcontainer" class="treesvg"></div>
-      
+        <output id ="outDown"></output>
       </div>
       
       <div>

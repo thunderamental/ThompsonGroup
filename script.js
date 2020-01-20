@@ -37,23 +37,24 @@ window.onload=function(){ // triggered after window is fully loaded. For input.
   
 }
 
-function parseArray(inputArray) {
-  console.log("Parse array executing with inputArray ", inputArray);
+function parseArray(input) { // takes raw input string from form
+  console.log("Parse array executing with input ", input);
+  var inputArray = input.split(", ");
   var outputElt = null; // this should actually be the identity.
   var holdElt = null;
   for (element of inputArray) {
     if (outputElt == null) {
-      if (element >= 0) {
-        outputElt = xi(element); 
+      if (element[0] != '-') { // was element >= 0
+        outputElt = xi(parseInt(element)); 
       } else {
-        outputElt = inv(xi(Math.abs(element)));
+        outputElt = inv(xi(Math.abs(parseInt(element))));
       }
     } else {
-      if (element >= 0) {
-        holdElt = fOp(outputElt, xi(element));
+      if (element[0] != '-') {
+        holdElt = fOp(outputElt, xi(parseInt(element)));
         outputElt = holdElt;
       } else {
-        holdElt = fOp(outputElt,inv(xi(Math.abs(element))));
+        holdElt = fOp(outputElt,inv(xi(Math.abs(parseInt(element)))));
         outputElt = holdElt;
       }
     }
@@ -61,29 +62,47 @@ function parseArray(inputArray) {
   return outputElt;
 } // WORKS
 
+console.log("\"w, a, b, -0, 1, -2\".split(\", \"):", ("-0, 1, -2").split(", "));
+
 function renderOne(){
   var eltFout = null;
 
   var eltIn = document.getElementById("elt1in");
   var eltOut = document.getElementById("elt1out");
   var elt = eltIn.value;
-  console.log(elt);
-  if (elt == "") { // change to 'unreadable input'
-    eltOut.value = "Empty input. Defaulted to x0.";
-    eltFout = x0;
-  } else {
-    // write a parser.
-    var hold = JSON.parse('[' + elt + ']'); 
-    console.log("hold : ", hold); // JSON parsing array works. now what's wrong?
-    eltFout = parseArray(hold);
 
-    console.log("parsed Array element was (eltFout)", eltFout)
-
+  try {
+    eltFout = parseArray(elt);
     eltOut.value = "(Input was " + elt + ")" ;
-  }
+  } catch (err) {
+    eltIn.value = "0"; // might need to change in future input updates
+    eltOut.value = "Invalid input. Defaulted to x0.";
+    eltFout = x0;
+  }    
+
   drawTree(eltFout.a, "in1acontainer");
   drawTree(eltFout.b, "in1bcontainer");
 } // button click elt 1
+
+function reduceOne(){
+  var eltFout = null;
+
+  var eltIn = document.getElementById("elt1in");
+  var eltOut = document.getElementById("elt1out");
+  var elt = eltIn.value;
+
+  try {
+    eltFout = reduce(parseArray(elt));
+    eltOut.value = "(Input was " + elt + ")" ;
+  } catch (err) {
+    eltIn.value = "0"; // might need to change in future input updates
+    eltOut.value = "Invalid input. Defaulted to x0.";
+    eltFout = x0;
+  }    
+
+  drawTree(eltFout.a, "in1acontainer");
+  drawTree(eltFout.b, "in1bcontainer");
+}
 
 function renderTwo(){
   var eltFout = null;
@@ -91,33 +110,56 @@ function renderTwo(){
   var eltIn = document.getElementById("elt2in");
   var eltOut = document.getElementById("elt2out");
   var elt = eltIn.value;
-  console.log(elt);
-  if (elt == "") { // change to 'unreadable input'
-    eltOut.value = "Empty input. Defaulted to x0.";
-    eltFout = x0;
-  } else {
-    // write a parser.
-    var hold = JSON.parse('[' + elt + ']'); 
-    console.log("hold : ", hold); // JSON parsing array works. now what's wrong?
-    eltFout = parseArray(hold);
 
-    console.log("parsed Array element was (eltFout)", eltFout)
-
+  try {
+    eltFout = parseArray(elt);
     eltOut.value = "(Input was " + elt + ")" ;
-  }
+  } catch (err) {
+    eltIn.value = "0"; // might need to change in future input updates
+    eltOut.value = "Invalid input. Defaulted to x0.";
+    eltFout = x0;
+  } 
+
   drawTree(eltFout.a, "in2acontainer");
   drawTree(eltFout.b, "in2bcontainer");
 } // button click elt 2 DONE
+
+function reduceTwo(){
+  var eltFout = null;
+
+  var eltIn = document.getElementById("elt2in");
+  var eltOut = document.getElementById("elt2out");
+  var elt = eltIn.value;
+
+  try {
+    eltFout = reduce(parseArray(elt));
+    eltOut.value = "(Input was " + elt + ")" ;
+  } catch (err) {
+    eltIn.value = "0"; // might need to change in future input updates
+    eltOut.value = "Invalid input. Defaulted to x0.";
+    eltFout = x0;
+  } 
+
+  drawTree(eltFout.a, "in2acontainer");
+  drawTree(eltFout.b, "in2bcontainer");
+}
 
 function calcButton() {
 
   var elt1In = document.getElementById("elt1in");
   var elt2In = document.getElementById("elt2in");
-  var inArray = JSON.parse('[' + elt1In.value + ',' + elt2In.value + ']'); 
+  var elt =  elt1In.value + ', ' + elt2In.value; 
 
-  var eltOut = document.getElementById("outdown"); // put this to use later. Normal Form
+  var eltOut = document.getElementById("outDown"); // put this to use later. Normal Form
 
-  var eltFout = parseArray(inArray);
+  try {
+    eltFout = parseArray(elt);
+    eltOut.value = "";
+  } catch (err) {
+    eltOut.value = "Invalid input. Defaulted to x0.";
+    eltFout = x0;
+  } 
+  
 
   drawTree(eltFout.a, "outacontainer");
   drawTree(eltFout.b, "outbcontainer");
@@ -127,12 +169,17 @@ function calcButton() {
 function reduceButton() {
   var elt1In = document.getElementById("elt1in");
   var elt2In = document.getElementById("elt2in");
-  var inArray = JSON.parse('[' + elt1In.value + ',' + elt2In.value + ']'); 
+  var elt =  elt1In.value + ', ' + elt2In.value;
 
-  var eltOut = document.getElementById("outdown"); // put this to use later. Normal Form
+  var eltOut = document.getElementById("outDown"); // put this to use later. Normal Form
 
-  var eltFout = reduce(parseArray(inArray));
-
+  try {
+    eltFout = reduce(parseArray(elt));
+    eltOut.value = "";
+  } catch (err) {
+    eltOut.value = "Invalid input. Defaulted to x0.";
+    eltFout = x0;
+  } 
 
   drawTree(eltFout.a, "outacontainer");
   drawTree(eltFout.b, "outbcontainer");
@@ -265,7 +312,7 @@ function stringifyNode(inp) { // JSON-stringify with circular dodge
 console.log("stringified x0.a:", stringifyNode(x0.a)); 
 // JSON stringify can be used to deep-equals compare two JSON like objects.
 
-function findFirst(node1, node2) {
+function findFirst(node1, node2) { // identifies first 
   if (node2.left == null) {
     return null; 
   }
@@ -307,7 +354,7 @@ function fOp(first, second) { // the group operation.
     var tempArray = [];
     var index = 0;
 
-    if (findFirst(hold1, hold2)!=null) { // originally 'while findFirst != null'..
+    while (findFirst(hold1, hold2)!=null) {
       // console.log("non null triggered");
       tempArray = findFirst(hold1, hold2); 
       // find the next node in the left element to be 'superimposed'
@@ -316,9 +363,13 @@ function fOp(first, second) { // the group operation.
       // get index of hold1's node to be replaced
       tempArray[0].left = copyNode(tempArray[1].left); 
       tempArray[0].right = copyNode(tempArray[1].right);
+      tempArray[0].left.parent = tempArray[0];
+      tempArray[0].right.parent = tempArray[0];
       // make hold1 into hold2 as usual
       out1array[index].left = copyNode(tempArray[1].left);
       out1array[index].right = copyNode(tempArray[1].right);
+      out1array[index].left.parent = out1array[index];
+      out1array[index].right.parent = out1array[index];
       // add to the partner tree
       out1array = [];
       hold1array = []; // reset preorder
@@ -327,16 +378,20 @@ function fOp(first, second) { // the group operation.
       tempArray = []; // cleanup
     }
 
-    if (findFirst(hold2, hold1)!=null) { // originally 'while findFirst != null'..
+    while (findFirst(hold2, hold1)!=null) { 
       tempArray = findFirst(hold2, hold1); 
       // find the next node in the right element to be 'superimposed'
       index = hold2array.indexOf(tempArray[0]);
       // get index of hold2's node to be replaced
       tempArray[0].left = copyNode(tempArray[1].left); // NEEDS TO COPY PARENT
       tempArray[0].right = copyNode(tempArray[1].right); 
+      tempArray[0].left.parent = tempArray[0];
+      tempArray[0].right.parent = tempArray[0];
       // make hold1 into hold2 as usual
       out2array[index].left = copyNode(tempArray[1].left); // NEEDS TO COPY PARENT
       out2array[index].right = copyNode(tempArray[1].right);
+      out2array[index].left.parent = out2array[index];
+      out2array[index].right.parent = out2array[index];
       // add to the partner tree
       out2array = [];
       hold2array = []; // reset preorder
