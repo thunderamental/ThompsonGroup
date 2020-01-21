@@ -1,7 +1,7 @@
 # Thompson Group F
 A simple client side webapp to calculate the group operation on the tree-pair representation of Thompson Group F (Vagabond Groups, Chameleon Groups). Said group will henceforth be referred to as just 'F'. 
 
-As hosting the page will only be done later on, you can just clone the repo and open index.html to view the app itself.
+The page is now hosted at github pages [here](https://thunderamental.github.io/ThompsonGroup/).
 
 This was done (by me, KW Theng) as part of a vacation research scholarship project at the University of Melbourne under the supervision of Dr. Lawrence Reeves. 
 
