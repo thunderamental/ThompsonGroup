@@ -4,7 +4,7 @@ A simple client side webapp to calculate the group operation on the tree-pair re
 This was done (by me, KW Theng) as part of a research scholarship project at the University of Melbourne under the supervision of Dr. Lawrence Reeves. 
 
 ## Overview
-The elements of F (and its related groups F_Tau, T, V, to name some), possess a nice visual representation in terms of pairs of balanced full binary trees. This small app provides a simple calculator based off the infinite generating set for F. It also is able to reduce tree-pair elements to a simple form. Currently, input is in terms of the infinite generating set.
+The elements of F (and to an extent its related groups F_Tau, T, V, to name some), possess a nice visual representation in terms of pairs of balanced full binary trees. This small app provides a simple calculator based off the infinite generating set for F. It also is able to reduce tree-pair elements to a simple form. Currently, input is in terms of the infinite generating set.
 
 Most code is fully front-end in JS, due to the simplicity of the required work and the ease of setup of such a product. I don't recommend JS for anything more complicated. The code in its current form is very rudimentary and I intend to return and clean it all up and optimize it. I will log my experiences if I do end up doing so.
 
@@ -19,6 +19,8 @@ The infinite presentation can be derived from the finite one:
 
 There is an (as of writing) open conjecture that F is not amenable. 
 
+Also, note that if one views F in the 'homeomorphisms of the unit interval' form, the group operation is composition, but is 'reversed' in terms of the tree-pair form. That is, let a(x), b(x) be elements of F that have tree-pair representations. The group produce a(x)*b(x) corresponds to the composition b(a(x)). I think I'm not clear here; I'll rewrite this to clarify it later.
+
 One can read more about this group online. A recommended resource is Jose Burillo's "Introduction to Thompson's Group F", which has been very helpful for my study into it.
 
 ## Checklist.
@@ -31,6 +33,7 @@ One can read more about this group online. A recommended resource is Jose Burill
 - [x] Tidy up CSS and add UI buttons.
 - [x] Fix input and string-to-element parser.
 - [x] Add ability to reduce tree pair elements.
-- [ ] Add ability to obtain normal form from tree pair.
+- [x] Add ability to obtain normal form from tree pair.
 - [ ] Tidy up UI text and add header to github.
+- [ ] Update README and add documentation for future use.
 - [ ] Host on persistent domain.

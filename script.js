@@ -7,15 +7,6 @@ high school. Comments usually come after functions and after lines of code,
 and unless specified otherwise, they refer to the previous immediate line.
 */
 
-/*
-17/01/2019: Most of the basic features are now implemented. 
-Finalizing this is the 2 more math heavy ideas.
-1. Removing similar subtrees. (Should be relatively easy.)
-2. Reduce to normal form. (Algorithmic approach to this exists.)
-Combining these ideas will 
-*/
-
-
 window.onload=function(){ // triggered after window is fully loaded. For input.
 
   var input = document.getElementById("elt1in");
@@ -38,7 +29,7 @@ window.onload=function(){ // triggered after window is fully loaded. For input.
 }
 
 function parseArray(input) { // takes raw input string from form
-  console.log("Parse array executing with input ", input);
+  // console.log("Parse array executing with input ", input);
   var inputArray = input.split(", ");
   var outputElt = null; // this should actually be the identity.
   var holdElt = null;
@@ -59,10 +50,14 @@ function parseArray(input) { // takes raw input string from form
       }
     }
   }
+  refreshParents(outputElt.a);
+  refreshParents(outputElt.b); 
+  /*
+  I don't know where I forgot to place the parents. refreshParent does what
+  it says on the can. All children get their parents reassigned.
+  */
   return outputElt;
-} // WORKS
-
-console.log("\"w, a, b, -0, 1, -2\".split(\", \"):", ("-0, 1, -2").split(", "));
+} // works.
 
 function renderOne(){
   var eltFout = null;
@@ -93,7 +88,8 @@ function reduceOne(){
 
   try {
     eltFout = reduce(parseArray(elt));
-    eltOut.value = "(Input was " + elt + ")" ;
+    // eltOut.value = "(Input was " + elt + ")" ;
+    eltOut.value = normalize(eltFout);
   } catch (err) {
     eltIn.value = "0"; // might need to change in future input updates
     eltOut.value = "Invalid input. Defaulted to x0.";
@@ -102,6 +98,8 @@ function reduceOne(){
 
   drawTree(eltFout.a, "in1acontainer");
   drawTree(eltFout.b, "in1bcontainer");
+
+
 }
 
 function renderTwo(){
@@ -133,7 +131,8 @@ function reduceTwo(){
 
   try {
     eltFout = reduce(parseArray(elt));
-    eltOut.value = "(Input was " + elt + ")" ;
+    // eltOut.value = "(Input was " + elt + ")" ;
+    eltOut.value = normalize(eltFout);
   } catch (err) {
     eltIn.value = "0"; // might need to change in future input updates
     eltOut.value = "Invalid input. Defaulted to x0.";
@@ -154,7 +153,7 @@ function calcButton() {
 
   try {
     eltFout = parseArray(elt);
-    eltOut.value = "";
+    eltOut.value = normalize(eltFout);
   } catch (err) {
     eltOut.value = "Invalid input. Defaulted to x0.";
     eltFout = x0;
@@ -175,7 +174,7 @@ function reduceButton() {
 
   try {
     eltFout = reduce(parseArray(elt));
-    eltOut.value = "";
+    eltOut.value = normalize(eltFout);
   } catch (err) {
     eltOut.value = "Invalid input. Defaulted to x0.";
     eltFout = x0;
@@ -183,9 +182,8 @@ function reduceButton() {
 
   drawTree(eltFout.a, "outacontainer");
   drawTree(eltFout.b, "outbcontainer");
-}
 
-console.log("Javascript test of Thompson F element operation");
+}
 
 class caretNode {
     constructor(input) {
@@ -242,10 +240,10 @@ x0.b.right.right = new caretNode(x0.b.right);
 generatePreorder(x0.a, x0.leafA);
 generatePreorder(x0.b, x0.leafB);
 
-console.log("The first generating element:", x0);
-console.log("A preorder on the references to leaves is included. Examples:")
-console.log("The preorder index of x0.a.left.left is " + x0.leafA.indexOf(x0.a.left.left));
-console.log("The preorder index of x0.a.left.right is " + x0.leafA.indexOf(x0.a.left.right));
+// console.log("The first generating element:", x0);
+// console.log("A preorder on the references to leaves is included. Examples:")
+// console.log("The preorder index of x0.a.left.left is " + x0.leafA.indexOf(x0.a.left.left));
+// console.log("The preorder index of x0.a.left.right is " + x0.leafA.indexOf(x0.a.left.right));
 
 var x1 = new eltF(new caretNode(null), new caretNode(null));
 x1.a.left = new caretNode(x1.a);
@@ -263,7 +261,7 @@ x1.b.right.right.right = new caretNode(x1.b.right.right);
 generatePreorder(x1.a, x1.leafA);
 generatePreorder(x1.b, x1.leafB);
 
-console.log("The second generating element:", x1);
+// console.log("The second generating element:", x1);
 
 var x0inv = new eltF(x0.b, x0.a);
 generatePreorder(x0inv.a, x0inv.leafA);
@@ -272,7 +270,7 @@ var x1inv = new eltF(x1.b, x1.a);
 generatePreorder(x1inv.a, x1inv.leafA);
 generatePreorder(x1inv.b, x1inv.leafB);
 
-console.log("The inverses of x0 and x1: ", x0inv, x1inv);
+// console.log("The inverses of x0 and x1: ", x0inv, x1inv);
 
 
 function copyNode(inp) { // JSON-stringify-parse with circular dodge
@@ -309,7 +307,7 @@ function stringifyNode(inp) { // JSON-stringify with circular dodge
   return clone;
 } // returns string instead of the JSON-object.
 
-console.log("stringified x0.a:", stringifyNode(x0.a)); 
+// console.log("stringified x0.a:", stringifyNode(x0.a)); 
 // JSON stringify can be used to deep-equals compare two JSON like objects.
 
 function findFirst(node1, node2) { // identifies first 
@@ -407,11 +405,10 @@ function fOp(first, second) { // the group operation.
  
 }
 
-console.log("Output of x0*x0: ", fOp(x0, x0));
-console.log("Output of x0*x1: ", fOp(x0, x1));
-console.log("Output of x0*x0inv: ", fOp(x0, x0inv));
-
-console.log("Output of x0inv*x1: ", fOp(x0inv, x1));
+// console.log("Output of x0*x0: ", fOp(x0, x0));
+// console.log("Output of x0*x1: ", fOp(x0, x1));
+// console.log("Output of x0*x0inv: ", fOp(x0, x0inv));
+// console.log("Output of x0inv*x1: ", fOp(x0inv, x1));
 
 
 function inv(elt) { // inverts element given
@@ -439,8 +436,7 @@ function xi(n) { // generates i'th element of the generating set.
   }
 } // x_n = x_(n-2)^-1 * x_(n-1) * x_(n-2).
 
-console.log("The generating element x_10 is: ", xi(10));
-
+// console.log("The generating element x_10 is: ", xi(10));
 
 function convertStandard(input) { // takes a caretNode and converts it to JSON standard.
   if (input == null) {return null;}
@@ -455,8 +451,8 @@ function convertStandard(input) { // takes a caretNode and converts it to JSON s
   }
 } // Consider porting the calculation code to JSON standard. For now, this works.
 
-console.log("convert my tree to JSON standard for d3 render: x1-left is: ", convertStandard(x1.a))
-console.log("the JSON, in string form: ", stringifyNode(convertStandard(x0.a)));
+// console.log("convert my tree to JSON standard for d3 render: x1-left is: ", convertStandard(x1.a))
+// console.log("the JSON, in string form: ", stringifyNode(convertStandard(x0.a)));
 
 function drawTree(root, inputID) { // NOTE. THE eltF TO tree CONVERSION IS DONE IN HERE. ALL math-logic IS IN eltF form!
   var svgHold = d3.select("#"+inputID); 
@@ -502,8 +498,6 @@ function fEquals(first, second) { // verify two eltFs are equal
           return true;
         } else { return false; }
 }
-
-// WARNING. I MAY HAVE MISUNDERSTOOD THE SUBTREE-REDUCTION PROCESS..
 
 function eqs(a,b) { // compares 2 roots of a (sub/)tree (a binary tree where all non-leafs have 2 children!)
   if (a.left == null && b.left == null) { return true; } // only need to check 1 child
@@ -563,25 +557,17 @@ function firstCommon(a, b) {
   return null;
 }
 
-
 function reduce(f) {
   var out1 = f.a;
   var out2 = f.b;
-  var out1array = [];
-  var out2array = [];
   var holdArray = [];
 
   while (firstCommon(out1, out2) != null) {
-    console.log("firstCommon while trigger in reduce");
-    console.log("out1 before:", out1);
-    console.log("out2 before:", out2);
     holdArray = firstCommon(out1, out2);
     holdArray[0].left = null;
     holdArray[0].right = null;
     holdArray[1].left = null;
     holdArray[1].right = null;
-    console.log("out1 after:", out1);
-    console.log("out2 after:", out2);
   }
 
   var output = new eltF(out1, out2);
@@ -591,6 +577,22 @@ function reduce(f) {
   return output;
 }
 
+function isLeftChild(node) { // caretNode argument
+  if ((node.parent == null) || node.parent.right == node) {
+    return false; // is right or root
+  } else {
+    return true; // is left.
+  }
+}
+
+function refreshParents(root) {
+  if (root.left != null) {
+    root.left.parent = root;
+    root.right.parent = root;
+    refreshParents(root.left);
+    refreshParents(root.right);
+  }
+}
 
 function findSimilar(node1, node2) { // finds first instance of common subtree.
   if (node1.left == null && node2.left == null) {
@@ -611,42 +613,74 @@ function findSimilar(node1, node2) { // finds first instance of common subtree.
   }
 } // this implements the WRONG method! I'm keeping this here, though, it might be useful.
 
-/*
-function simplify(element) {
-  var out1 = element.a;
-  var out2 = element.b;
-  var holdArray = [];
-
-  console.log("out1 before:", out1);
-  console.log("out2 before:", out2);
-  while(findSimilar(out1, out2) != null) {
-    console.log("trigger while loop in simplify");
-    holdArray = findSimilar(out1, out2);
-    console.log("holdArray", holdArray);
-    holdArray[0].left = null;
-    holdArray[0].right = null;
-    holdArray[1].left = null;
-    holdArray[1].right = null;
-    console.log("holdArray", holdArray);
+function normalize(f) { // takes a reduced tree pair and outputs the normal form string.
+  var rSpine = [];
+  var positive = [];
+  var negative = [];
+  var exp = 0;
+  var currNode = new caretNode(null);
+  // refreshParents(f.a);
+  // refreshParents(f.b); No need, now handled in parseArray.
+  rightSpine(f.a, rSpine);
+  for (x = 0; x < f.leafA.length; x++) {
+    currNode = f.leafA[x];
+    while (!rSpine.includes(currNode) && (isLeftChild(currNode))) {
+      exp++;
+      currNode = currNode.parent;
+    }
+    positive.push(exp);
+    exp = 0;
   }
-  console.log("out1 after:", out1);
-  console.log("out2 after:", out2);
-  console.log("findSimilar(out1,out2)", findSimilar(out1, out2))
+  rSpine = [];
+  rightSpine(f.b, rSpine);
+  for (x = 0; x < f.leafB.length; x++) {
+    currNode = f.leafB[x];
+    while (!rSpine.includes(currNode) && (isLeftChild(currNode))) {
+      exp++;
+      currNode = currNode.parent;
+    }
+    negative.push(exp);
+    exp = 0;
+  }
 
-  var out1array = [];
-  var out2array = [];
-  generatePreorder(out1, out1array);
-  generatePreorder(out2, out2array);
-  var output = new eltF(out1, out2);
-  output.leafA = out1array;
-  output.leafB = out2array;
+  var output = "Normal form : [";
+  var outhold = "";
+  for (x = 0; x < positive.length; x++) {
+    if (positive[x] != 0) {
+      outhold += "(x_" + x + ")^" + positive[x] + "*";
+    }
+  }
+  if (outhold.charAt(outhold.length - 1) == '*') {
+    outhold = outhold.slice(0,-1);
+  }
+  if (outhold == "") { outhold += '1'; }
+  output += outhold;
+  output += "] * [";
+  var outhold = "";
+  for (x = 0; x < negative.length; x++) {
+    if (negative[x] != 0) {
+      outhold += "(x_" + x + ")^" + negative[x] + "*";
+    }
+  }
+  if (outhold.charAt(outhold.length - 1) == '*') {
+    outhold = outhold.slice(0,-1);
+  }
+  if (outhold == "") { outhold += '1'; }
+  output += outhold;
+  output += "]^(-1)"
+  
+
+
+  // output = "Indexes corresp. to the generating elements. positive word : " 
+  // + positive.toString() + "; negative word: (inverse of) " + negative.toString();
+
   return output;
 }
-*/
-// console.log("simplify(x0): ", simplify(x0))
-// console.log("simplify(x0) == x0 ", fEquals(simplify(x0),x0));
 
-console.log("reduce(x0*x0inv): ", reduce(fOp(x0, x0inv)));
-console.log("reduce(x1*x1inv): ", reduce(fOp(x1, x1inv)));
-
-console.log("reduce(x0*x1*x1inv): ", reduce(fOp(fOp(x0, x1), x1inv)));
+function rightSpine(node, outArray) { // takes a root of a tree and pushes right-spine to an array
+  outArray.push(node);
+  if (node.right != null) {
+    outArray.push(node.left);
+    rightSpine(node.right, outArray);
+  }
+}
