@@ -1,7 +1,9 @@
 # Thompson Group F
 A simple client side webapp to calculate the group operation on the tree-pair representation of Thompson Group F (Vagabond Groups, Chameleon Groups). Said group will henceforth be referred to as just 'F'. 
 
-This was done (by me, KW Theng) as part of a research scholarship project at the University of Melbourne under the supervision of Dr. Lawrence Reeves. 
+As hosting the page will only be done later on, you can just clone the repo and open index.html to view the app itself.
+
+This was done (by me, KW Theng) as part of a vacation research scholarship project at the University of Melbourne under the supervision of Dr. Lawrence Reeves. 
 
 ## Overview
 The elements of F (and to an extent its related groups F_Tau, T, V, to name some), possess a nice visual representation in terms of pairs of balanced full binary trees. This small app provides a simple calculator based off the infinite generating set for F. It also is able to reduce tree-pair elements to a simple form. Currently, input is in terms of the infinite generating set.
