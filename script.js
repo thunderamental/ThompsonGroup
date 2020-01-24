@@ -30,9 +30,18 @@ window.onload=function(){ // triggered after window is fully loaded. For input.
 
 function parseArray(input) { // takes raw input string from form
   // console.log("Parse array executing with input ", input);
-  var inputArray = input.split(", ");
+  var holdArray = input.split(',');
+  var inputArray = [];
   var outputElt = null; // this should actually be the identity.
   var holdElt = null;
+
+  for (element of holdArray) {
+    if (element[0] == ' ') {
+      inputArray.push(element.slice(1));
+    } else {
+      inputArray.push(element);
+    }
+  }
   for (element of inputArray) {
     if (outputElt == null) {
       if (element[0] != '-') { // was element >= 0
@@ -45,6 +54,7 @@ function parseArray(input) { // takes raw input string from form
         holdElt = fOp(outputElt, xi(parseInt(element)));
         outputElt = holdElt;
       } else {
+        console.log("The problem");
         holdElt = fOp(outputElt,inv(xi(Math.abs(parseInt(element)))));
         outputElt = holdElt;
       }
@@ -68,10 +78,10 @@ function renderOne(){
 
   try {
     eltFout = parseArray(elt);
-    eltOut.value = "(Input was " + elt + ")" ;
+    eltOut.value = "(Your input was \"" + elt + "\")" ;
   } catch (err) {
     eltIn.value = "0"; // might need to change in future input updates
-    eltOut.value = "Invalid input. Defaulted to x0.";
+    eltOut.innerHTML = "Invalid input. Defaulted to x<sub>0</sub>.";
     eltFout = x0;
   }    
 
@@ -89,10 +99,10 @@ function reduceOne(){
   try {
     eltFout = reduce(parseArray(elt));
     // eltOut.value = "(Input was " + elt + ")" ;
-    eltOut.value = normalize(eltFout);
+    eltOut.innerHTML = normalize(eltFout);
   } catch (err) {
     eltIn.value = "0"; // might need to change in future input updates
-    eltOut.value = "Invalid input. Defaulted to x0.";
+    eltOut.innerHTML = "Invalid input. Defaulted to x<sub>0</sub>.";
     eltFout = x0;
   }    
 
@@ -111,10 +121,10 @@ function renderTwo(){
 
   try {
     eltFout = parseArray(elt);
-    eltOut.value = "(Input was " + elt + ")" ;
+    eltOut.value = "(Your input was \"" + elt + "\")" ;
   } catch (err) {
     eltIn.value = "0"; // might need to change in future input updates
-    eltOut.value = "Invalid input. Defaulted to x0.";
+    eltOut.innerHTML = "Invalid input. Defaulted to x<sub>0</sub>.";
     eltFout = x0;
   } 
 
@@ -131,11 +141,10 @@ function reduceTwo(){
 
   try {
     eltFout = reduce(parseArray(elt));
-    // eltOut.value = "(Input was " + elt + ")" ;
-    eltOut.value = normalize(eltFout);
+    eltOut.innerHTML = normalize(eltFout);
   } catch (err) {
     eltIn.value = "0"; // might need to change in future input updates
-    eltOut.value = "Invalid input. Defaulted to x0.";
+    eltOut.innerHTML = "Invalid input. Defaulted to x<sub>0</sub>.";
     eltFout = x0;
   } 
 
@@ -153,9 +162,9 @@ function calcButton() {
 
   try {
     eltFout = parseArray(elt);
-    eltOut.value = normalize(eltFout);
+    eltOut.innerHTML = normalize(eltFout);
   } catch (err) {
-    eltOut.value = "Invalid input. Defaulted to x0.";
+    eltOut.innerHTML = "Invalid input. Defaulted to x<sub>0</sub>.";
     eltFout = x0;
   } 
   
@@ -174,9 +183,9 @@ function reduceButton() {
 
   try {
     eltFout = reduce(parseArray(elt));
-    eltOut.value = normalize(eltFout);
+    eltOut.innerHTML = normalize(eltFout);
   } catch (err) {
-    eltOut.value = "Invalid input. Defaulted to x0.";
+    eltOut.innerHTML = "Invalid input. Defaulted to x<sub>0</sub>.";
     eltFout = x0;
   } 
 
@@ -643,31 +652,31 @@ function normalize(f) { // takes a reduced tree pair and outputs the normal form
     exp = 0;
   }
 
-  var output = "Normal form : [";
+  var output = "Normal form : <br>[";
   var outhold = "";
   for (x = 0; x < positive.length; x++) {
     if (positive[x] != 0) {
-      outhold += "(x_" + x + ")^" + positive[x] + "*";
+      outhold += "(x<sub>" + x + "</sub>)<sup>" + positive[x] + "</sup> • ";
     }
   }
-  if (outhold.charAt(outhold.length - 1) == '*') {
-    outhold = outhold.slice(0,-1);
+  if (outhold.charAt(outhold.length - 1) == ' ') {
+    outhold = outhold.slice(0,-3);
   }
   if (outhold == "") { outhold += '1'; }
   output += outhold;
-  output += "] * [";
+  output += "] • [";
   var outhold = "";
   for (x = 0; x < negative.length; x++) {
     if (negative[x] != 0) {
-      outhold += "(x_" + x + ")^" + negative[x] + "*";
+      outhold += "(x<sub>" + x + "</sub>)<sup>" + negative[x] + "</sup> • ";
     }
   }
-  if (outhold.charAt(outhold.length - 1) == '*') {
-    outhold = outhold.slice(0,-1);
+  if (outhold.charAt(outhold.length - 1) == ' ') {
+    outhold = outhold.slice(0,-3);
   }
   if (outhold == "") { outhold += '1'; }
   output += outhold;
-  output += "]^(-1)"
+  output += "]<sup>-1<sup>"
   
 
 

@@ -22,6 +22,10 @@
   width: 200px;
 } */
 
+.outBox{
+  float : center;
+}
+
 
 .link {
   fill: none;

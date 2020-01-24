@@ -12,6 +12,15 @@
   </head>
 
   <body>
+  <div class="header">
+    <p>
+       | <a href="https://github.com/thunderamental/ThompsonGroup">The Github Repo</a>
+       | Last Update: 24th Jan 2020.
+       | <a href=mailto:ktheng@student.unimelb.edu.au>Click here to send me feedback.</a>
+      
+       |
+    </p>
+  </div>
 
     <div class="grid-container">
 
@@ -27,7 +36,7 @@
         <div id="in1acontainer" class="treesvg"></div>
         <div id="in1bcontainer" class="treesvg"></div>
 
-        <output id="elt1out">An empty string will default to the generator x<sub>0</sub>.</output>
+        <output id="elt1out" class="outBox">An empty string will default to the generator x<sub>0</sub>.</output>
         <form> 
           <input type="button" id="reduce1" value="Reduce input 1" onclick="reduceOne()"> 
           <!-- this isnt done but is an easy port. see reduceButton(), the output version. -->
@@ -36,7 +45,7 @@
       </div>
       
       <div>
-        <p> Input format: '1, -2, 3' will compute x<sub>1</sub>*(x<sub>2</sub>)<sup>-1</sup>*x<sub>3</sub>, where x<sub>n</sub> is the nth generating element, and so on. </p>
+        <p> Input format: '1, -2, 3' will compute x<sub>1</sub> • (x<sub>2</sub>)<sup>-1</sup> • x<sub>3</sub>, where x<sub>n</sub> is the nth generating element, and so on. </p>
         
         <p> Click below to calculate. (You may need to zoom out in your browser in order to view elements properly.) </p>
         <form> 
@@ -45,6 +54,7 @@
         <form> 
           <input type="button" id="calculate" value="Calculate unreduced output from string" onclick="calcButton()"> 
         </form> 
+        <p>The output is displayed directly below (You may need to scroll).</p>
       </div>
       
       <div>
@@ -57,7 +67,7 @@
         <div id="in2acontainer" class="treesvg"></div>
         <div id="in2bcontainer" class="treesvg"></div>
 
-        <output id="elt2out">An empty string will default to the generator x<sub>0</sub>.</output>
+        <output id="elt2out" class="outBox">An empty string will default to the generator x<sub>0</sub>.</output>
         <form> 
           <input type="button" id="reduce2" value="Reduce input 2" onclick="reduceTwo()"> 
           <!-- this isnt done but is an easy port. see reduceButton(), the output version. -->
@@ -72,7 +82,7 @@
         
         <div id="outacontainer" class="treesvg"></div>
         <div id="outbcontainer" class="treesvg"></div>
-        <output id ="outDown"></output>
+        <output id ="outDown" class="outBox"></output>
       </div>
       
       <div>

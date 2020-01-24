@@ -36,6 +36,6 @@ One can read more about this group online. A recommended resource is Jose Burill
 - [x] Fix input and string-to-element parser.
 - [x] Add ability to reduce tree pair elements.
 - [x] Add ability to obtain normal form from tree pair.
-- [ ] Tidy up UI text and add header to github.
+- [x] Tidy up UI text and add header links to github, email, etc.
 - [ ] Update README and add documentation for future use.
-- [ ] Host on persistent domain.
+- [x] Host on persistent domain. (currently Github Pages)
