@@ -15,10 +15,10 @@
   <div class="header">
     <p>
        | <a href="https://github.com/thunderamental/ThompsonGroup">The Github Repo</a>
-       | Last Update: 24th Jan 2020.
+       | Last Update: 29th Jan 2020 -- added comments and tidied up some code. That should be it for now, thanks for all the fish!
        | <a href=mailto:ktheng@student.unimelb.edu.au>Click here to send me feedback.</a>
-      
-       |
+       | hit Refresh to 'remove' all inputs. 
+       | 
     </p>
   </div>
 
@@ -32,14 +32,12 @@
           <input type="button" id="button1" value="click to input element" onclick="renderOne()">
         </form>
         
-        <!-- <img src="in1.png" alt="test image" height="200" width="400"> -->
         <div id="in1acontainer" class="treesvg"></div>
         <div id="in1bcontainer" class="treesvg"></div>
 
         <output id="elt1out" class="outBox">An empty string will default to the generator x<sub>0</sub>.</output>
         <form> 
           <input type="button" id="reduce1" value="Reduce input 1" onclick="reduceOne()"> 
-          <!-- this isnt done but is an easy port. see reduceButton(), the output version. -->
         </form>
         
       </div>
@@ -47,7 +45,10 @@
       <div>
         <p> Input format: '1, -2, 3' will compute x<sub>1</sub> • (x<sub>2</sub>)<sup>-1</sup> • x<sub>3</sub>, where x<sub>n</sub> is the nth generating element, and so on. </p>
         
-        <p> Click below to calculate. (You may need to zoom out in your browser in order to view elements properly.) </p>
+        <p> 
+          Click below to calculate. (You may need to zoom out in your browser in order to view elements properly.) 
+          You can also click any of the buttons that say 'reduce' to calculate normal form. 
+        </p>
         <form> 
           <input type="button" id="reduceOutput" value="Calculate reduced output" onclick="reduceButton()"> 
         </form> 
@@ -70,7 +71,6 @@
         <output id="elt2out" class="outBox">An empty string will default to the generator x<sub>0</sub>.</output>
         <form> 
           <input type="button" id="reduce2" value="Reduce input 2" onclick="reduceTwo()"> 
-          <!-- this isnt done but is an easy port. see reduceButton(), the output version. -->
         </form>
       </div>  
       
@@ -87,11 +87,18 @@
       
       <div>
         <!-- 6 -->
-        <!-- <img src="Test.svg" alt="test image" height="200" width="400"> -->
       </div>  
     </div>
 
     <script src="script.js"></script>
+  
     
+    <div class="footer">
+      <p>
+         This was done as part of a vacation scholarship research project at the University of Melbourne, under Dr. Lawrence Reeves, studying the F<sub>i</sub> Thompson groups. It's a nice accessible way to visualize and introduce the concept of the group F, which is the 'simplest' of the Thompson groups. Jan 2020. All code is open source and can be found on the github link at the top left of this page.
+      </p>
+    </div>
+
   </body>
+  
 </html>

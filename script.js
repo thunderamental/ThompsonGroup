@@ -11,7 +11,7 @@ window.onload=function(){ // triggered after window is fully loaded. For input.
 
   var input = document.getElementById("elt1in");
   input.addEventListener("keyup", function(event) {
-    if (event.keyCode === 13) {
+    if (event.keyCode === 13) { // makes enter button click required button i
     event.preventDefault();
     document.getElementById("button1").click();
     }
@@ -25,14 +25,12 @@ window.onload=function(){ // triggered after window is fully loaded. For input.
     }
   });
 
-  
-}
+} // makes enter button click required button instead.
 
 function parseArray(input) { // takes raw input string from form
-  // console.log("Parse array executing with input ", input);
   var holdArray = input.split(',');
   var inputArray = [];
-  var outputElt = null; // this should actually be the identity.
+  var outputElt = null;
   var holdElt = null;
 
   for (element of holdArray) {
@@ -41,10 +39,11 @@ function parseArray(input) { // takes raw input string from form
     } else {
       inputArray.push(element);
     }
-  }
+  } // to fix a bug that didn't like spaces in the input.
+
   for (element of inputArray) {
-    if (outputElt == null) {
-      if (element[0] != '-') { // was element >= 0
+    if (outputElt == null) { // for 'first element'. Actually, should combine with the else by initial output == identity.
+      if (element[0] != '-') { // check for 'inverse' 
         outputElt = xi(parseInt(element)); 
       } else {
         outputElt = inv(xi(Math.abs(parseInt(element))));
@@ -54,7 +53,6 @@ function parseArray(input) { // takes raw input string from form
         holdElt = fOp(outputElt, xi(parseInt(element)));
         outputElt = holdElt;
       } else {
-        console.log("The problem");
         holdElt = fOp(outputElt,inv(xi(Math.abs(parseInt(element)))));
         outputElt = holdElt;
       }
@@ -67,7 +65,16 @@ function parseArray(input) { // takes raw input string from form
   it says on the can. All children get their parents reassigned.
   */
   return outputElt;
-} // works.
+} // parses a string in a needed generator format
+
+
+
+/*
+The following 'reduce' and 'render' buttons just handle the HTML button presses.
+Really straightforward and simple. One can make the argument for abstracting it 
+into one or two functions, the input being 'reduced or not' or 'where to render 
+the tree'. I may come back to this to do exactly that.
+*/
 
 function renderOne(){
   var eltFout = null;
@@ -194,6 +201,16 @@ function reduceButton() {
 
 }
 
+
+/*
+The following is my implementation of the structures we're using to represent the binary tree
+pair / element from Thompson F. They're just trees and nodes. I started off with a home-brewed
+type structure (not knowing what graphics library I would be using), and later found that d3 
+requires a specific tree structure format. So there's some translation going on in and around,
+and I've kept it (as best I can) to the very end / output so the code is still wholly in the
+structure I prefer.
+*/
+
 class caretNode {
     constructor(input) {
         this.left = null;
@@ -211,7 +228,7 @@ class eltF {
     }
 } // element of vagabond F. Pair of binary trees and two arrays for leaf preorder
 
-class node { // JSON-d3 standard.
+class node { // JSON-d3 standard. To render trees in d3.js.
   constructor(input) {
     this.name = null;
     this.parent = input;
@@ -228,15 +245,51 @@ function generatePreorder(node, outputArray) {
   }
 } // does what it says on the can. takes leaf nodes and sorts into a preorder array. 
 
-function getPreorderIndex(node, preorder) {
-  return preorder.indexOf(node);
-  for (leaf in preorder) {
-    if (node === leaf) { return preorder.indexOf(node); }
-  } 
-} // this entire function is INCREDIBLY unnecessary but i'm keeping it as an omen of things to come LOL
+function copyNode(inp) { // JSON-stringify-parse with circular dodge
+  var cache = [];
+    let clone = JSON.parse(JSON.stringify(inp, function(key, value) {
+      if (typeof value === 'object' && value !== null) {
+          if (cache.indexOf(value) !== -1) {
+              // Duplicate reference found, discard key
+              return;
+          }
+          // Store value in our collection
+          cache.push(value);
+      }
+      return value;
+  }));
+  cache = null;
+  return clone;
+} // see https://stackoverflow.com/questions/11616630/how-can-i-print-a-circular-structure-in-a-json-like-format
+
+function stringifyNode(inp) { // JSON-stringify with circular dodge
+  var cache = [];
+    let clone = JSON.stringify(inp, function(key, value) {
+      if (typeof value === 'object' && value !== null) {
+          if (cache.indexOf(value) !== -1) {
+              // Duplicate reference found, discard key
+              return;
+          }
+          // Store value in our collection
+          cache.push(value);
+      }
+      return value;
+  });
+  cache = null;
+  return clone;
+} // returns string instead of the JSON-object.
+
+// console.log("stringified x0.a:", stringifyNode(x0.a)); 
+// JSON stringify can be used to deep-equals compare two JSON like objects.
 
 
-/* the following section hardcodes the two generating elements for F, x_0 and x_1. */
+
+/* 
+the following section hardcodes the two generating elements for F, x_0 and x_1. 
+There should also be an identity element, but for the elegance of it all i'll 
+keep it just to x_0 and x_1-- it's not every day you get an infinite group with a
+nice small finite generating set. 
+*/
 var x0 = new eltF(new caretNode(null), new caretNode(null));
 x0.a.left = new caretNode(x0.a);
 x0.a.right = new caretNode(x0.a);
@@ -282,42 +335,12 @@ generatePreorder(x1inv.b, x1inv.leafB);
 // console.log("The inverses of x0 and x1: ", x0inv, x1inv);
 
 
-function copyNode(inp) { // JSON-stringify-parse with circular dodge
-  var cache = [];
-    let clone = JSON.parse(JSON.stringify(inp, function(key, value) {
-      if (typeof value === 'object' && value !== null) {
-          if (cache.indexOf(value) !== -1) {
-              // Duplicate reference found, discard key
-              return;
-          }
-          // Store value in our collection
-          cache.push(value);
-      }
-      return value;
-  }));
-  cache = null;
-  return clone;
-} // see https://stackoverflow.com/questions/11616630/how-can-i-print-a-circular-structure-in-a-json-like-format
-
-function stringifyNode(inp) { // JSON-stringify with circular dodge
-  var cache = [];
-    let clone = JSON.stringify(inp, function(key, value) {
-      if (typeof value === 'object' && value !== null) {
-          if (cache.indexOf(value) !== -1) {
-              // Duplicate reference found, discard key
-              return;
-          }
-          // Store value in our collection
-          cache.push(value);
-      }
-      return value;
-  });
-  cache = null;
-  return clone;
-} // returns string instead of the JSON-object.
-
-// console.log("stringified x0.a:", stringifyNode(x0.a)); 
-// JSON stringify can be used to deep-equals compare two JSON like objects.
+/*
+Here we really get into the math, which is nice. There are some
+helper functions, both for the case of the operation and the
+reducing. One should be able to see the parallels with this and 
+manually performing the group operation
+*/
 
 function findFirst(node1, node2) { // identifies first 
   if (node2.left == null) {
@@ -362,11 +385,10 @@ function fOp(first, second) { // the group operation.
     var index = 0;
 
     while (findFirst(hold1, hold2)!=null) {
-      // console.log("non null triggered");
+      
       tempArray = findFirst(hold1, hold2); 
       // find the next node in the left element to be 'superimposed'
       index = hold1array.indexOf(tempArray[0]);
-      // console.log("index of swap node is " + index);
       // get index of hold1's node to be replaced
       tempArray[0].left = copyNode(tempArray[1].left); 
       tempArray[0].right = copyNode(tempArray[1].right);
@@ -443,7 +465,7 @@ function xi(n) { // generates i'th element of the generating set.
               xi(n-1)),
             xi(n-2));  
   }
-} // x_n = x_(n-2)^-1 * x_(n-1) * x_(n-2).
+} // x_n = x_(n-2)^-1 * x_(n-1) * x_(n-2). This is one of the standard relations.
 
 // console.log("The generating element x_10 is: ", xi(10));
 
@@ -564,7 +586,7 @@ function firstCommon(a, b) {
     }
   }
   return null;
-}
+} // Finds the first common subtree, like findFirst does with differences.
 
 function reduce(f) {
   var out1 = f.a;
@@ -584,15 +606,15 @@ function reduce(f) {
   generatePreorder(output.b, output.leafB);
 
   return output;
-}
+} // same way one would 'reduce' a tree pair with leaf exponents.
 
-function isLeftChild(node) { // caretNode argument
+function isLeftChild(node) { // really, the parameter is in fact a caretNode..
   if ((node.parent == null) || node.parent.right == node) {
     return false; // is right or root
   } else {
     return true; // is left.
   }
-}
+} // remember, I do math in the structure I defined.
 
 function refreshParents(root) {
   if (root.left != null) {
@@ -601,26 +623,7 @@ function refreshParents(root) {
     refreshParents(root.left);
     refreshParents(root.right);
   }
-}
-
-function findSimilar(node1, node2) { // finds first instance of common subtree.
-  if (node1.left == null && node2.left == null) {
-    return null; // end of the sub-tree. Nothing to copy.
-  }
-  if (eqs(node1, node2)) {
-    return [node1, node2]; 
-  } else if (node1.left != null && node2.left != null) {
-    if (findSimilar(node1.left, node2.left) != null) {
-      return findSimilar(node1.left, node2.left);
-    }
-  } else if (node1.right != null && node2.right != null) {
-    if (findSimilar(node1.right, node2.right) != null) {
-      return findSimilar(node1.right, node2.right);
-    }
-  } else {
-    return null;
-  }
-} // this implements the WRONG method! I'm keeping this here, though, it might be useful.
+} // some logistic clean-up.
 
 function normalize(f) { // takes a reduced tree pair and outputs the normal form string.
   var rSpine = [];
@@ -628,8 +631,8 @@ function normalize(f) { // takes a reduced tree pair and outputs the normal form
   var negative = [];
   var exp = 0;
   var currNode = new caretNode(null);
-  // refreshParents(f.a);
-  // refreshParents(f.b); No need, now handled in parseArray.
+  // refreshParents(f.a); Originally the parent thing was bugging me a little, something was wrong. I had neglected to handle it somewhere.
+  // refreshParents(f.b); Now the problem is handled in parseArray method. But I should eventually get to the root of this.
   rightSpine(f.a, rSpine);
   for (x = 0; x < f.leafA.length; x++) {
     currNode = f.leafA[x];
@@ -677,11 +680,6 @@ function normalize(f) { // takes a reduced tree pair and outputs the normal form
   if (outhold == "") { outhold += '1'; }
   output += outhold;
   output += "]<sup>-1<sup>"
-  
-
-
-  // output = "Indexes corresp. to the generating elements. positive word : " 
-  // + positive.toString() + "; negative word: (inverse of) " + negative.toString();
 
   return output;
 }
@@ -692,4 +690,4 @@ function rightSpine(node, outArray) { // takes a root of a tree and pushes right
     outArray.push(node.left);
     rightSpine(node.right, outArray);
   }
-}
+} // For comparison reasons.

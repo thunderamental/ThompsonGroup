@@ -3,7 +3,7 @@ A simple client side webapp to calculate the group operation on the tree-pair re
 
 The page is now hosted at github pages [here](https://thunderamental.github.io/ThompsonGroup/).
 
-This was done (by me, KW Theng) as part of a vacation research scholarship project at the University of Melbourne under the supervision of Dr. Lawrence Reeves. 
+This was done (by me, KW Theng) as part of a vacation research scholarship project at the University of Melbourne under the supervision of Dr. Lawrence Reeves. Disclaimer: I am in no way a web developer, and must apologize for any glaring issues in my code here. Do shoot me an email at ktheng@student.unimelb.edu.au if you feel strongly enough on anything I've mauled up.
 
 ## Overview
 The elements of F (and to an extent its related groups F_Tau, T, V, to name some), possess a nice visual representation in terms of pairs of balanced full binary trees. This small app provides a simple calculator based off the infinite generating set for F. It also is able to reduce tree-pair elements to a simple form. Currently, input is in terms of the infinite generating set.
@@ -37,5 +37,6 @@ One can read more about this group online. A recommended resource is Jose Burill
 - [x] Add ability to reduce tree pair elements.
 - [x] Add ability to obtain normal form from tree pair.
 - [x] Tidy up UI text and add header links to github, email, etc.
-- [ ] Update README and add documentation for future use.
+- [x] Update README and add documentation for future use. (? tentatively done)
 - [x] Host on persistent domain. (currently Github Pages)
+- [ ] Upload the infographic about some group theory to the github. (stay tuned..)
